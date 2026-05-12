@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Docker CLI
         run: |
-          apt-get update -qq && apt-get install -y -qq docker.io
+          apk add --no-cache docker-cli
 
       - name: Log in to Gitea Container Registry
         run: |
