@@ -1,0 +1,36 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        run: |
+          SERVER="${{ github.server_url }}"
+          PROTO="${SERVER%%://*}://"
+          HOST="${SERVER#*://}"
+          git clone "${PROTO}oauth2:${{ github.token }}@${HOST}/${{ github.repository }}.git" .
+          git checkout ${{ github.sha }}
+
+      - name: Install Docker CLI
+        run: |
+          apt-get update -qq && apt-get install -y -qq docker.io
+
+      - name: Log in to Gitea Container Registry
+        run: |
+          echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ vars.REGISTRY_URL }} -u ${{ vars.REGISTRY_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ vars.REGISTRY_URL }}/${{ vars.REGISTRY_USERNAME }}/taskway:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ vars.REGISTRY_URL }}/${{ vars.REGISTRY_USERNAME }}/taskway:latest
