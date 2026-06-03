@@ -14,13 +14,13 @@ public class AdminUserSeeder implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${ADMIN_USERNAME}")
+    @Value("${ADMIN_USERNAME:}")
     private String adminUsername;
 
-    @Value("${ADMIN_EMAIL}")
+    @Value("${ADMIN_EMAIL:}")
     private String adminEmail;
 
-    @Value("${ADMIN_PASSWORD}")
+    @Value("${ADMIN_PASSWORD:}")
     private String adminPassword;
 
     public AdminUserSeeder(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -30,6 +30,11 @@ public class AdminUserSeeder implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        if(adminUsername.isEmpty() ||
+        adminPassword.isEmpty()||
+        adminEmail.isEmpty()){
+            return;
+        }
         if (userRepository.findByUsername(adminUsername).isPresent()) {
             return;
         }
