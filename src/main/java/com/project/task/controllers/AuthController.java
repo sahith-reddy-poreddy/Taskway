@@ -1,5 +1,7 @@
 package com.project.task.controllers;
 
+import com.project.task.dto.LoginRequestDTO;
+import com.project.task.dto.LoginResponseDTO;
 import com.project.task.dto.RegisterRequestDTO;
 import com.project.task.dto.RegisterResponseDTO;
 import com.project.task.services.AuthService;
@@ -19,6 +21,12 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
