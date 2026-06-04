@@ -5,6 +5,8 @@ import com.project.task.dto.LoginResponseDTO;
 import com.project.task.dto.RegisterRequestDTO;
 import com.project.task.dto.RegisterResponseDTO;
 import com.project.task.services.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
-        LoginResponseDTO response = authService.login(request);
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request,
+                                                  HttpServletRequest httpRequest,
+                                                  HttpServletResponse httpResponse) {
+        LoginResponseDTO response = authService.login(request, httpRequest, httpResponse);
         return ResponseEntity.ok(response);
     }
 
